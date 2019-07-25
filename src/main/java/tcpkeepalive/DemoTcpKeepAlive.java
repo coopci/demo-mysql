@@ -21,15 +21,17 @@ public class DemoTcpKeepAlive {
          * */
         try {
             Connection con = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3308/?socketFactory=tcpkeepalive.MySocketFactory&tcpKeepAlive=false", 
+                    "jdbc:mysql://localhost/?socketFactory=tcpkeepalive.MySocketFactory&tcpKeepAlive=false", 
                     //"jdbc:mysql://localhost:3308/?", 
-                    "root", "123456");
+                    "", "");
             
             if (con instanceof com.mysql.cj.jdbc.ConnectionImpl) {
                 com.mysql.cj.jdbc.ConnectionImpl ci = (com.mysql.cj.jdbc.ConnectionImpl) con;
             }
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("select SLEEP(1);");
+            
+            System.out.println("Run `sudo iptables -A INPUT -p tcp --destination-port 3306 -j DROP`, you will see communication link failure.");
+            ResultSet rs = stmt.executeQuery("select SLEEP(100);");
             while (rs.next())
                 System.out.println(rs.getInt(1) + "  ");
             con.close();
